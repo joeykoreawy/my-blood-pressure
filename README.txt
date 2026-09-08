@@ -1,34 +1,28 @@
-내 혈압 V1 — 개인용 iPhone PWA
+MyPressure V1.0
+===============
 
-구성
-- index.html: 앱 본체
-- manifest.json: 홈 화면 앱 정보
-- sw.js: 오프라인 캐시
-- icon-192.png / icon-512.png: 앱 아이콘
+배포
+1) 이 폴더 안의 파일을 GitHub 저장소 my-blood-pressure의 루트에 업로드/교체합니다.
+2) index.html, app.js, styles.css, manifest.json, sw.js, icon-192.png, icon-512.png가 저장소 첫 화면에 바로 보여야 합니다.
+3) GitHub Pages 주소는 기존과 동일하게 유지합니다.
+4) 아이폰 홈 화면 앱을 완전히 종료 후 다시 열어 업데이트를 확인합니다.
 
-V1 기능
-- 최고/최저혈압/맥박 빠른 입력
-- 날짜·시간 자동 기록
-- 메모
-- 오늘 평균
-- 최근 7일과 이전 7일 평균 변화
-- 7/30/90일/전체 통계
-- 최고·최저혈압 추세 그래프
-- 월간 캘린더 및 날짜별 기록
-- 기록 수정/삭제
-- JSON 전체 백업/복원
-- CSV 내보내기
-- IndexedDB 기기 저장
-- PWA 홈 화면 설치 및 오프라인 실행 지원
+Supabase
+- Project URL과 Publishable key는 app.js에 연결되어 있습니다.
+- Secret key / service_role key는 절대 프론트엔드 파일에 넣지 않습니다.
+- bp_measurements, user_settings 테이블 및 RLS 정책이 먼저 생성되어 있어야 합니다.
 
-아이폰에서 '앱'처럼 설치하려면
-1) 이 폴더 전체를 HTTPS 웹주소에 올립니다. (GitHub Pages / Cloudflare Pages / Netlify 등)
-2) 아이폰 Safari에서 해당 주소를 엽니다.
-3) 공유 버튼 → 홈 화면에 추가 → 웹 앱으로 열기를 선택합니다.
+기존 V1 데이터
+- 같은 GitHub Pages 주소에서 업데이트하면 기존 IndexedDB를 유지합니다.
+- 로그인 후 기존 로컬 기록이 발견되면 현재 계정으로 가져올지 확인합니다.
+- 확인하면 기록에 사용자 소유권을 붙인 뒤 서버에 동기화합니다.
 
-주의
-- index.html만 iPhone 파일 앱에서 직접 열 경우 기본 화면 테스트는 가능할 수 있으나,
-  PWA 설치와 서비스워커 오프라인 기능을 제대로 사용하려면 HTTPS 주소에서 열어야 합니다.
-- 혈압 데이터는 기본적으로 서버가 아닌 해당 브라우저의 IndexedDB에 저장됩니다.
-- 브라우저 데이터 삭제, 기기 변경 등에 대비해 JSON 백업을 주기적으로 보관하는 것이 좋습니다.
-- 본 앱의 통계는 개인 기록용이며 의료 진단 기능이 아닙니다.
+V1.0 주요 기능
+- 상황별 해시태그 복수 선택 및 사용자 태그
+- 태그 조합별 통계
+- 약 복용 전/후 평균 비교
+- 복약 시작일 이후 통계
+- 오늘 3회 측정 루틴
+- 이메일 회원가입/로그인
+- 로컬 우선 저장 + Supabase 동기화
+- JSON/CSV 내보내기 및 기존 JSON 복원

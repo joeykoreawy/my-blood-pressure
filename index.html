@@ -3,95 +3,33 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
-  <meta name="theme-color" content="#f4f6f8" />
+  <meta name="theme-color" content="#f3f5f7" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <meta name="apple-mobile-web-app-title" content="내 혈압" />
+  <meta name="apple-mobile-web-app-title" content="mypressure" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>내 혈압</title>
-  <style>
-    :root{
-      --bg:#f4f6f8;--card:#fff;--text:#111820;--muted:#6f7a86;--line:#e7ebef;
-      --accent:#2563eb;--accent2:#0f766e;--danger:#c93b3b;--shadow:0 10px 30px rgba(20,35,50,.08);
-      --radius:22px;
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Segoe UI,sans-serif}
-    body{min-height:100vh;padding-bottom:calc(84px + env(safe-area-inset-bottom))}
-    button,input,textarea,select{font:inherit}
-    button{border:0;cursor:pointer}
-    .app{max-width:760px;margin:0 auto;padding:calc(16px + env(safe-area-inset-top)) 16px 24px}
-    header{display:flex;align-items:flex-start;justify-content:space-between;margin:4px 2px 18px}
-    .eyebrow{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.04em}
-    h1{font-size:30px;line-height:1.05;margin:5px 0 0;letter-spacing:-.04em}
-    .today{font-size:13px;color:var(--muted);text-align:right;padding-top:5px}
-    .view{display:none}.view.active{display:block}
-    .grid{display:grid;gap:12px}.grid.two{grid-template-columns:1fr 1fr}
-    .card{background:var(--card);border:1px solid rgba(0,0,0,.035);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-    .section-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
-    .section-title h2{font-size:17px;margin:0;letter-spacing:-.02em}
-    .section-title small{color:var(--muted)}
-    .hero{padding:20px;background:linear-gradient(145deg,#ffffff 0%,#f8fbff 100%)}
-    .hero-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
-    .metric{background:#f7f9fb;border-radius:16px;padding:14px 10px;text-align:center}
-    .metric strong{display:block;font-size:27px;line-height:1.1;letter-spacing:-.04em}
-    .metric span{display:block;font-size:11px;color:var(--muted);margin-top:5px}
-    .metric .empty{color:#a5adb6}
-    .trend{margin-top:12px;font-size:13px;color:var(--muted)}
-    .trend b.up{color:#b54747}.trend b.down{color:#16735d}.trend b.flat{color:#59636e}
-    .quick-form{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-    .field label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:0 0 7px 2px}
-    .field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:#fbfcfd;border-radius:15px;padding:13px 12px;outline:none;color:var(--text)}
-    .field input:focus,.field textarea:focus{border-color:#9db9ff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-    .field input[type=number]{font-size:22px;font-weight:750;text-align:center;padding:14px 6px}
-    .full{grid-column:1/-1}
-    .row{display:flex;gap:10px;align-items:center}
-    .primary{width:100%;background:var(--text);color:#fff;border-radius:16px;padding:15px;font-weight:800}
-    .secondary{background:#eef2f6;color:var(--text);border-radius:14px;padding:11px 13px;font-weight:700}
-    .danger{background:#fff0f0;color:var(--danger);border-radius:14px;padding:11px 13px;font-weight:700}
-    .seg{display:flex;background:#e9edf1;border-radius:14px;padding:3px;gap:3px}
-    .seg button{flex:1;background:transparent;color:var(--muted);padding:8px 7px;border-radius:11px;font-size:12px;font-weight:700}
-    .seg button.active{background:#fff;color:var(--text);box-shadow:0 2px 8px rgba(20,35,50,.08)}
-    .chart-wrap{height:210px;position:relative;margin:6px -2px 0}
-    canvas{width:100%;height:100%;display:block}
-    .chart-legend{display:flex;gap:14px;font-size:12px;color:var(--muted);margin-top:8px;justify-content:center}
-    .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}.dot.sys{background:#2563eb}.dot.dia{background:#0f766e}
-    .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
-    .stat{border:1px solid var(--line);border-radius:15px;padding:12px;text-align:center}
-    .stat b{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
-    .calendar-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .calendar-head h3{margin:0;font-size:17px}
-    .icon-btn{width:38px;height:38px;border-radius:12px;background:#eef2f5;font-size:20px}
-    .weekdays,.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-    .weekdays div{text-align:center;font-size:11px;color:var(--muted);padding:3px}
-    .day{aspect-ratio:1/1;border-radius:13px;background:#f8fafb;display:flex;align-items:center;justify-content:center;position:relative;font-size:13px;font-weight:650}
-    .day.other{opacity:.25}.day.today{outline:2px solid #c8d8ff}.day.selected{background:var(--text);color:#fff}
-    .day.has::after{content:"";position:absolute;bottom:5px;width:5px;height:5px;border-radius:50%;background:#2563eb}.day.selected.has::after{background:#fff}
-    .list{display:grid;gap:9px}
-    .entry{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:16px;padding:13px 14px;background:#fff}
-    .entry .bp{font-size:20px;font-weight:800;letter-spacing:-.03em}.entry .sub{font-size:11px;color:var(--muted);margin-top:3px}.entry .right{text-align:right}.entry .pulse{font-size:12px;color:var(--muted)}
-    .entry button{background:transparent;color:#8b949e;font-size:18px;padding:6px}
-    .empty-state{text-align:center;color:var(--muted);padding:25px 10px;font-size:13px}
-    .settings-list{display:grid;gap:10px}.settings-item{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.settings-item:last-child{border:0}.settings-item .meta{font-size:12px;color:var(--muted);margin-top:3px}
-    .footnote{font-size:11px;line-height:1.55;color:var(--muted);margin-top:12px}
-    nav{position:fixed;z-index:10;left:50%;transform:translateX(-50%);bottom:0;width:min(760px,100%);background:rgba(247,249,251,.92);backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.06);padding:8px 10px calc(8px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr)}
-    nav button{background:transparent;color:#7d8792;padding:8px 4px;border-radius:14px;font-size:11px;font-weight:700}nav button span{display:block;font-size:20px;margin-bottom:3px}nav button.active{color:var(--text);background:#fff}
-    dialog{border:0;border-radius:24px;padding:0;width:min(520px,calc(100% - 28px));box-shadow:0 30px 70px rgba(0,0,0,.2)}dialog::backdrop{background:rgba(15,23,32,.42);backdrop-filter:blur(3px)}.modal{padding:20px}.modal h3{margin:0 0 14px}.modal-actions{display:flex;gap:8px;margin-top:15px}.modal-actions button{flex:1}
-    .toast{position:fixed;z-index:30;left:50%;transform:translateX(-50%) translateY(20px);bottom:calc(90px + env(safe-area-inset-bottom));background:#101820;color:#fff;padding:11px 15px;border-radius:13px;font-size:13px;opacity:0;pointer-events:none;transition:.22s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    @media(max-width:430px){.app{padding-left:12px;padding-right:12px}.card{padding:16px}.quick-form{gap:7px}.field input[type=number]{font-size:20px}.hero-row{gap:6px}.metric strong{font-size:24px}}
-  </style>
+  <link rel="stylesheet" href="styles.css" />
+  <title>mypressure</title>
 </head>
 <body>
 <div class="app">
   <header>
-    <div><div class="eyebrow">PERSONAL HEALTH LOG</div><h1>내 혈압</h1></div>
+    <div class="brand">
+      <div class="wordmark"><span class="my">my</span><span class="pressure">pressure</span><span class="dot">.</span></div>
+      <div class="eyebrow">PERSONAL BLOOD PRESSURE LOG</div>
+    </div>
     <div class="today" id="headerDate"></div>
   </header>
 
   <section id="view-home" class="view active">
+    <div id="connectionNotice" class="notice hidden"></div>
+
     <div class="card hero">
-      <div class="section-title"><h2>오늘 평균</h2><small id="todayCount">기록 없음</small></div>
+      <div class="section-title">
+        <h2>오늘 평균</h2>
+        <div id="syncPill" class="sync-pill warn"><i class="sync-dot"></i><span>로컬 저장</span></div>
+      </div>
       <div class="hero-row">
         <div class="metric"><strong id="todaySys" class="empty">—</strong><span>최고 mmHg</span></div>
         <div class="metric"><strong id="todayDia" class="empty">—</strong><span>최저 mmHg</span></div>
@@ -100,19 +38,33 @@
       <div class="trend" id="weekTrend">최근 기록을 쌓으면 7일 평균 변화가 표시됩니다.</div>
     </div>
 
-    <div class="card" style="margin-top:12px">
-      <div class="section-title"><h2>빠른 기록</h2><small>날짜·시간 자동</small></div>
-      <form id="quickForm" class="quick-form">
-        <div class="field"><label>최고</label><input id="sys" type="number" inputmode="numeric" min="50" max="300" placeholder="120" required></div>
-        <div class="field"><label>최저</label><input id="dia" type="number" inputmode="numeric" min="30" max="200" placeholder="80" required></div>
-        <div class="field"><label>맥박</label><input id="pulse" type="number" inputmode="numeric" min="25" max="250" placeholder="70"></div>
-        <div class="field full"><label>메모 (선택)</label><input id="note" type="text" maxlength="120" placeholder="예: 기상 후, 커피 전, 운동 후"></div>
-        <button class="primary full" type="submit">혈압 기록하기</button>
-      </form>
-      <div class="footnote">혈압 수치는 의료 진단이 아닌 개인 기록·추세 확인용으로 저장됩니다.</div>
+    <div class="card">
+      <div class="section-title"><h2>오늘 측정 루틴</h2><small id="routineCount">0 / 3</small></div>
+      <div id="routineList" class="routine"></div>
+      <div class="footnote">루틴 버튼을 누르면 해당 상황의 태그가 자동 선택됩니다. 실제 측정 시각과 복약 시각은 의료진의 지시에 맞춰주세요.</div>
     </div>
 
-    <div class="card" style="margin-top:12px">
+    <div class="card">
+      <div class="section-title"><h2>빠른 기록</h2><small>날짜·시간 자동</small></div>
+      <form id="quickForm" class="quick-form">
+        <div class="field"><label>최고</label><input id="sys" type="number" inputmode="numeric" min="40" max="300" placeholder="120" required></div>
+        <div class="field"><label>최저</label><input id="dia" type="number" inputmode="numeric" min="20" max="200" placeholder="80" required></div>
+        <div class="field"><label>맥박</label><input id="pulse" type="number" inputmode="numeric" min="20" max="250" placeholder="70"></div>
+
+        <div class="tag-section">
+          <div class="tag-section-title"><b>상황 태그</b><span>여러 개 선택 가능</span></div>
+          <div id="quickTagGroups"></div>
+          <div class="custom-tag-row"><input id="customTag" maxlength="20" placeholder="#커피전 처럼 직접 추가"><button id="addCustomTag" type="button">추가</button></div>
+          <div id="selectedCustomTags" class="tags" style="margin-top:7px"></div>
+        </div>
+
+        <div class="field full"><label>메모 (선택)</label><textarea id="note" maxlength="300" placeholder="예: 기상 후 10분 안정, 전날 수면 부족"></textarea></div>
+        <button class="primary full" type="submit">혈압 기록하기</button>
+      </form>
+      <div class="footnote">혈압 수치는 의료 진단이 아닌 개인 기록·추세 확인용입니다. 측정·복약 방법은 담당 의료진의 지시를 우선하세요.</div>
+    </div>
+
+    <div class="card">
       <div class="section-title"><h2>최근 기록</h2><small id="recentLabel"></small></div>
       <div id="recentList" class="list"></div>
     </div>
@@ -122,10 +74,19 @@
     <div class="card">
       <div class="section-title"><h2>혈압 추세</h2><small id="statPeriodText"></small></div>
       <div class="seg" id="periodSeg">
-        <button data-days="7" class="active">7일</button><button data-days="30">30일</button><button data-days="90">90일</button><button data-days="0">전체</button>
+        <button data-days="7" class="active">7일</button>
+        <button data-days="30">30일</button>
+        <button data-days="90">90일</button>
+        <button data-days="med">복약 이후</button>
+        <button data-days="0">전체</button>
+      </div>
+      <div class="filter-block">
+        <div class="filter-head"><b>해시태그로 기록 모아보기</b><button id="clearTagFilter">전체 보기</button></div>
+        <div id="statTagFilters" class="tags"></div>
+        <div class="filter-note">여러 태그를 선택하면 선택한 태그를 모두 포함한 기록만 계산합니다. 예: #아침 + #약복용전</div>
       </div>
       <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
-      <div class="chart-legend"><span><i class="dot sys"></i>최고</span><span><i class="dot dia"></i>최저</span></div>
+      <div class="chart-legend"><span><i class="legend-dot sys"></i>최고</span><span><i class="legend-dot dia"></i>최저</span></div>
       <div class="stats-grid">
         <div class="stat"><b id="avgSys">—</b><span>평균 최고</span></div>
         <div class="stat"><b id="avgDia">—</b><span>평균 최저</span></div>
@@ -137,7 +98,18 @@
         <div class="stat"><b id="countStat">0</b><span>측정 횟수</span></div>
       </div>
     </div>
-    <div class="card" style="margin-top:12px">
+
+    <div class="card">
+      <div class="section-title"><h2>약 복용 전 · 후 비교</h2><small id="medComparePeriod"></small></div>
+      <div class="compare-grid">
+        <div class="compare-box"><div class="label">#약복용전</div><div id="preMedBp" class="bp">— / —</div><div id="preMedCount" class="count">기록 없음</div></div>
+        <div class="compare-box"><div class="label">#약복용후</div><div id="postMedBp" class="bp">— / —</div><div id="postMedCount" class="count">기록 없음</div></div>
+      </div>
+      <div id="medDiff" class="compare-diff">전·후 태그가 모두 쌓이면 평균 차이를 표시합니다.</div>
+      <div class="footnote">시간대·식사·활동량 등 조건이 다를 수 있으므로 이 비교는 단순 기록 요약이며 약효를 판정하는 지표가 아닙니다.</div>
+    </div>
+
+    <div class="card">
       <div class="section-title"><h2>기간 변화</h2><small>앞 절반 vs 뒤 절반</small></div>
       <div id="periodChange" class="empty-state">기록이 2개 이상 쌓이면 변화폭을 계산합니다.</div>
     </div>
@@ -149,7 +121,7 @@
       <div class="weekdays"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
       <div id="calendarGrid" class="calendar"></div>
     </div>
-    <div class="card" style="margin-top:12px">
+    <div class="card">
       <div class="section-title"><h2 id="selectedDateTitle">선택 날짜</h2><small id="selectedSummary"></small></div>
       <div id="dayList" class="list"></div>
     </div>
@@ -157,22 +129,37 @@
 
   <section id="view-more" class="view">
     <div class="card">
-      <div class="section-title"><h2>데이터 관리</h2><small>내 기기 저장</small></div>
+      <div class="section-title"><h2>계정 · 동기화</h2><small id="accountState">로그인 안 됨</small></div>
+      <div id="loggedOutBox">
+        <div class="settings-item"><div><b>서버 백업 연결</b><div class="meta">이메일 계정으로 로그인하면 로컬 기록을 Supabase에 동기화합니다.</div></div><button id="openAuth" class="secondary">로그인</button></div>
+      </div>
+      <div id="loggedInBox" class="hidden">
+        <div class="settings-item"><div><b>로그인 계정</b><div id="accountEmail" class="account-email"></div></div><button id="logoutBtn" class="secondary">로그아웃</button></div>
+        <div class="settings-item"><div><b>지금 동기화</b><div id="syncMeta" class="meta">상태 확인 중</div></div><button id="syncNow" class="secondary">동기화</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><h2>복약 설정</h2><small>통계 기준</small></div>
+      <div class="settings-item"><div><b>복약 시작일</b><div class="meta">병원에서 약을 받은 뒤 기록을 시작한 날짜를 지정하세요.</div></div><input id="medStartDate" type="date"></div>
+      <div class="footnote">설정하면 통계 화면의 ‘복약 이후’ 기간을 사용할 수 있습니다.</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><h2>데이터 관리</h2><small>로컬 + 서버</small></div>
       <div class="settings-list">
-        <div class="settings-item"><div><b>JSON 백업</b><div class="meta">모든 기록을 원본 그대로 보관</div></div><button id="exportJson" class="secondary">내보내기</button></div>
+        <div class="settings-item"><div><b>JSON 백업</b><div class="meta">기록과 태그를 원본 형태로 보관</div></div><button id="exportJson" class="secondary">내보내기</button></div>
         <div class="settings-item"><div><b>CSV 내보내기</b><div class="meta">엑셀·병원 상담용 표 형태</div></div><button id="exportCsv" class="secondary">내보내기</button></div>
-        <div class="settings-item"><div><b>백업 복원</b><div class="meta">이 앱에서 만든 JSON 파일 불러오기</div></div><button id="importBtn" class="secondary">불러오기</button></div>
-        <div class="settings-item"><div><b>전체 기록 삭제</b><div class="meta">현재 기기 안의 기록을 모두 삭제</div></div><button id="deleteAll" class="danger">삭제</button></div>
+        <div class="settings-item"><div><b>백업 복원</b><div class="meta">기존 V1 또는 MyPressure JSON 불러오기</div></div><button id="importBtn" class="secondary">불러오기</button></div>
+        <div class="settings-item"><div><b>이 기기 로컬 기록 삭제</b><div class="meta">서버 데이터는 삭제하지 않습니다.</div></div><button id="deleteLocal" class="danger">삭제</button></div>
       </div>
       <input id="importFile" type="file" accept="application/json,.json" hidden>
     </div>
-    <div class="card" style="margin-top:12px">
-      <div class="section-title"><h2>아이폰 홈 화면에 설치</h2></div>
-      <div class="footnote" style="font-size:13px;color:var(--text)">Safari에서 이 사이트를 연 뒤 <b>공유 버튼 → 홈 화면에 추가 → 웹 앱으로 열기</b>를 선택하면 일반 앱처럼 실행할 수 있습니다. 오프라인에서도 기록 화면이 열리도록 구성했습니다.</div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <div class="section-title"><h2>V1 정보</h2><small id="storageStatus">저장소 확인 중</small></div>
-      <div class="footnote">데이터는 기본적으로 서버에 전송하지 않고 이 기기의 브라우저 저장소(IndexedDB)에 보관합니다. iOS에서 브라우저 데이터 삭제·기기 교체 등에 대비해 가끔 JSON 백업을 권장합니다.</div>
+
+    <div class="card">
+      <div class="section-title"><h2>설치 · 정보</h2><small>MyPressure V1.0</small></div>
+      <div class="footnote" style="font-size:12px;color:var(--text)">Safari에서 <b>공유 → 홈 화면에 추가 → 웹 앱으로 열기</b>를 선택하면 일반 앱처럼 실행됩니다. 앱 화면과 로컬 기록은 오프라인에서도 사용할 수 있고, 인터넷이 연결되면 로그인 계정과 동기화합니다.</div>
+      <div class="footnote">GitHub Pages에는 앱 코드만 올라가며 혈압 기록은 GitHub에 저장되지 않습니다. 서버 동기화 기록은 사용자의 Supabase 프로젝트에 저장됩니다.</div>
     </div>
   </section>
 </div>
@@ -184,81 +171,35 @@
   <button data-view="more"><span>•••</span>더보기</button>
 </nav>
 
+<dialog id="authDialog"><div class="modal">
+  <h3>mypressure.</h3>
+  <div class="lead">이메일 계정으로 로그인하면 기기 안의 기록과 서버 기록을 동기화할 수 있습니다.</div>
+  <div class="auth-tabs"><button id="loginTab" class="active">로그인</button><button id="signupTab">회원가입</button></div>
+  <form id="authForm" class="auth-form">
+    <input id="authEmail" type="email" autocomplete="email" placeholder="이메일" required>
+    <input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="비밀번호 (8자 이상)" required>
+    <div id="authMsg" class="auth-msg"></div>
+    <button id="authSubmit" class="primary" type="submit">로그인</button>
+    <button id="authCancel" class="secondary" type="button">취소</button>
+  </form>
+</div></dialog>
+
 <dialog id="editDialog"><div class="modal">
   <h3>기록 수정</h3>
+  <div class="lead">수정 내용은 온라인 상태에서 서버에도 반영됩니다.</div>
   <form id="editForm" class="quick-form">
     <input id="editId" type="hidden">
-    <div class="field"><label>최고</label><input id="editSys" type="number" required></div>
-    <div class="field"><label>최저</label><input id="editDia" type="number" required></div>
-    <div class="field"><label>맥박</label><input id="editPulse" type="number"></div>
+    <div class="field"><label>최고</label><input id="editSys" type="number" min="40" max="300" required></div>
+    <div class="field"><label>최저</label><input id="editDia" type="number" min="20" max="200" required></div>
+    <div class="field"><label>맥박</label><input id="editPulse" type="number" min="20" max="250"></div>
     <div class="field full"><label>날짜·시간</label><input id="editDate" type="datetime-local" required></div>
-    <div class="field full"><label>메모</label><input id="editNote" type="text" maxlength="120"></div>
+    <div class="tag-section"><div class="tag-section-title"><b>태그</b><span>수정 가능</span></div><div id="editTagGroups"></div></div>
+    <div class="field full"><label>메모</label><textarea id="editNote" maxlength="300"></textarea></div>
     <div class="modal-actions full"><button type="button" id="editDelete" class="danger">삭제</button><button type="button" id="editCancel" class="secondary">취소</button><button type="submit" class="primary">저장</button></div>
   </form>
 </div></dialog>
+
 <div class="toast" id="toast"></div>
-
-<script>
-const DB_NAME='myBloodPressureDB', STORE='readings', VERSION=1;
-let db, allReadings=[], statsDays=7, calDate=new Date(), selectedDateKey=localDateKey(new Date());
-const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-function pad(n){return String(n).padStart(2,'0')}
-function localDateKey(d){return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`}
-function fmtDate(d){return new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',weekday:'short'}).format(d)}
-function fmtTime(d){return new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}).format(d)}
-function avg(a){return a.length?Math.round(a.reduce((s,v)=>s+v,0)/a.length):null}
-function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
-function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-
-function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,VERSION);req.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(STORE)){const st=d.createObjectStore(STORE,{keyPath:'id'});st.createIndex('timestamp','timestamp')}};req.onsuccess=e=>{db=e.target.result;resolve(db)};req.onerror=()=>reject(req.error)})}
-function dbGetAll(){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readonly').objectStore(STORE).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function dbPut(v){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).put(v);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
-function dbDelete(id){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).delete(id);r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
-function dbClear(){return new Promise((resolve,reject)=>{const r=db.transaction(STORE,'readwrite').objectStore(STORE).clear();r.onsuccess=()=>resolve();r.onerror=()=>reject(r.error)})}
-async function refresh(){allReadings=(await dbGetAll()).sort((a,b)=>b.timestamp-a.timestamp);renderAll()}
-
-function renderAll(){renderHome();renderStats();renderCalendar();$('#storageStatus').textContent=`기록 ${allReadings.length}건 저장됨`}
-function renderHome(){
- const todayKey=localDateKey(new Date()); const today=allReadings.filter(r=>localDateKey(new Date(r.timestamp))===todayKey);
- const vals=[['#todaySys',avg(today.map(r=>r.sys))],['#todayDia',avg(today.map(r=>r.dia))],['#todayPulse',avg(today.filter(r=>r.pulse).map(r=>r.pulse))]];
- vals.forEach(([id,v])=>{const e=$(id);e.textContent=v??'—';e.classList.toggle('empty',v==null)});
- $('#todayCount').textContent=today.length?`${today.length}회 측정`:'기록 없음';
- const recent=allReadings.slice(0,5);$('#recentLabel').textContent=allReadings.length?`총 ${allReadings.length}건`:'';$('#recentList').innerHTML=recent.length?recent.map(entryHtml).join(''):'<div class="empty-state">아직 기록이 없습니다.<br>첫 혈압을 입력해보세요.</div>';
- const now=Date.now(), d7=7*864e5; const cur=allReadings.filter(r=>r.timestamp>=now-d7), prev=allReadings.filter(r=>r.timestamp<now-d7&&r.timestamp>=now-2*d7);
- if(cur.length&&prev.length){const ds=avg(cur.map(r=>r.sys))-avg(prev.map(r=>r.sys)), dd=avg(cur.map(r=>r.dia))-avg(prev.map(r=>r.dia));$('#weekTrend').innerHTML=`이전 7일 대비 최고 <b class="${ds>0?'up':ds<0?'down':'flat'}">${ds>0?'+':''}${ds}</b>, 최저 <b class="${dd>0?'up':dd<0?'down':'flat'}">${dd>0?'+':''}${dd} mmHg</b>`} else $('#weekTrend').textContent='최근 기록을 쌓으면 7일 평균 변화가 표시됩니다.';
-}
-function entryHtml(r){const d=new Date(r.timestamp);return `<div class="entry"><div><div class="bp">${r.sys} / ${r.dia}</div><div class="sub">${fmtDate(d)} · ${fmtTime(d)}${r.note?` · ${escapeHtml(r.note)}`:''}</div></div><div class="right"><div class="pulse">${r.pulse?`♥ ${r.pulse}`:'맥박 —'}</div><button onclick="openEdit('${r.id}')">•••</button></div></div>`}
-
-function getFiltered(){if(statsDays===0)return [...allReadings].reverse();const cutoff=Date.now()-statsDays*864e5;return allReadings.filter(r=>r.timestamp>=cutoff).reverse()}
-function renderStats(){const rows=getFiltered();$('#statPeriodText').textContent=statsDays?`최근 ${statsDays}일`:'전체 기록'; const sys=rows.map(r=>r.sys),dia=rows.map(r=>r.dia),pul=rows.filter(r=>r.pulse).map(r=>r.pulse);$('#avgSys').textContent=avg(sys)??'—';$('#avgDia').textContent=avg(dia)??'—';$('#avgPulse').textContent=avg(pul)??'—';$('#minSys').textContent=sys.length?Math.min(...sys):'—';$('#maxSys').textContent=sys.length?Math.max(...sys):'—';$('#countStat').textContent=rows.length;drawChart(rows);
- const box=$('#periodChange'); if(rows.length<2){box.className='empty-state';box.textContent='기록이 2개 이상 쌓이면 변화폭을 계산합니다.';return}
- const mid=Math.floor(rows.length/2), a=rows.slice(0,mid),b=rows.slice(mid);const ds=avg(b.map(r=>r.sys))-avg(a.map(r=>r.sys)),dd=avg(b.map(r=>r.dia))-avg(a.map(r=>r.dia));box.className='';box.innerHTML=`<div class="stats-grid"><div class="stat"><b>${ds>0?'+':''}${ds}</b><span>최고혈압 변화</span></div><div class="stat"><b>${dd>0?'+':''}${dd}</b><span>최저혈압 변화</span></div><div class="stat"><b>${rows.length}</b><span>기간 측정수</span></div></div><div class="footnote">선택 기간을 시간순으로 절반씩 나눠, 앞 절반 평균과 뒤 절반 평균의 차이를 계산했습니다.</div>`
-}
-function drawChart(rows){const c=$('#trendChart'),rect=c.getBoundingClientRect(),dpr=window.devicePixelRatio||1;c.width=Math.max(1,rect.width*dpr);c.height=Math.max(1,rect.height*dpr);const x=c.getContext('2d');x.scale(dpr,dpr);const w=rect.width,h=rect.height;x.clearRect(0,0,w,h);if(!rows.length){x.fillStyle='#8a949e';x.font='13px -apple-system';x.textAlign='center';x.fillText('이 기간의 기록이 없습니다.',w/2,h/2);return}
- const daily={};rows.forEach(r=>{const k=localDateKey(new Date(r.timestamp));(daily[k]??=[]).push(r)});const pts=Object.keys(daily).sort().map(k=>({k,sys:avg(daily[k].map(r=>r.sys)),dia:avg(daily[k].map(r=>r.dia))})); const vals=pts.flatMap(p=>[p.sys,p.dia]);let min=Math.min(...vals)-10,max=Math.max(...vals)+10;min=Math.max(20,Math.floor(min/10)*10);max=Math.ceil(max/10)*10;if(max-min<40){max+=20;min-=20}
- const L=34,R=10,T=12,B=28,iw=w-L-R,ih=h-T-B; x.strokeStyle='#e6eaee';x.lineWidth=1;x.fillStyle='#8a949e';x.font='10px -apple-system';x.textAlign='right';for(let i=0;i<=4;i++){const y=T+ih*i/4;const v=Math.round(max-(max-min)*i/4);x.beginPath();x.moveTo(L,y);x.lineTo(w-R,y);x.stroke();x.fillText(v,L-5,y+3)}
- const px=i=>pts.length===1?L+iw/2:L+iw*i/(pts.length-1), py=v=>T+ih*(max-v)/(max-min);function line(key,color){x.strokeStyle=color;x.lineWidth=2.5;x.lineJoin='round';x.lineCap='round';x.beginPath();pts.forEach((p,i)=>{const X=px(i),Y=py(p[key]);i?x.lineTo(X,Y):x.moveTo(X,Y)});x.stroke();pts.forEach((p,i)=>{x.fillStyle=color;x.beginPath();x.arc(px(i),py(p[key]),3,0,Math.PI*2);x.fill()})}line('sys','#2563eb');line('dia','#0f766e');
- x.fillStyle='#8a949e';x.textAlign='center';const indexes=pts.length<=4?pts.map((_,i)=>i):[0,Math.floor((pts.length-1)/2),pts.length-1];indexes.forEach(i=>{const [y,m,d]=pts[i].k.split('-');x.fillText(`${m}.${d}`,px(i),h-8)});
-}
-
-function renderCalendar(){const y=calDate.getFullYear(),m=calDate.getMonth();$('#calendarTitle').textContent=`${y}년 ${m+1}월`;const first=new Date(y,m,1),start=new Date(y,m,1-first.getDay());const has=new Set(allReadings.map(r=>localDateKey(new Date(r.timestamp))));let html='';for(let i=0;i<42;i++){const d=new Date(start);d.setDate(start.getDate()+i);const k=localDateKey(d);html+=`<button class="day ${d.getMonth()!==m?'other':''} ${k===localDateKey(new Date())?'today':''} ${k===selectedDateKey?'selected':''} ${has.has(k)?'has':''}" data-date="${k}">${d.getDate()}</button>`}$('#calendarGrid').innerHTML=html;$$('#calendarGrid .day').forEach(b=>b.onclick=()=>{selectedDateKey=b.dataset.date;renderCalendar()});const chosen=allReadings.filter(r=>localDateKey(new Date(r.timestamp))===selectedDateKey);const d=new Date(selectedDateKey+'T12:00:00');$('#selectedDateTitle').textContent=fmtDate(d);$('#selectedSummary').textContent=chosen.length?`${chosen.length}회 · 평균 ${avg(chosen.map(r=>r.sys))}/${avg(chosen.map(r=>r.dia))}`:'기록 없음';$('#dayList').innerHTML=chosen.length?chosen.map(entryHtml).join(''):'<div class="empty-state">이 날짜의 기록이 없습니다.</div>'}
-
-window.openEdit=function(id){const r=allReadings.find(v=>v.id===id);if(!r)return;$('#editId').value=id;$('#editSys').value=r.sys;$('#editDia').value=r.dia;$('#editPulse').value=r.pulse||'';$('#editNote').value=r.note||'';const d=new Date(r.timestamp),local=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);$('#editDate').value=local;$('#editDialog').showModal()}
-
-$('#quickForm').addEventListener('submit',async e=>{e.preventDefault();const sys=+$('#sys').value,dia=+$('#dia').value,pulse=$('#pulse').value?+$('#pulse').value:null;if(sys<=dia){toast('최고 혈압이 최저 혈압보다 커야 합니다.');return}const r={id:crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random(),timestamp:Date.now(),sys,dia,pulse,note:$('#note').value.trim(),createdAt:Date.now()};await dbPut(r);e.target.reset();await refresh();toast('혈압을 기록했습니다.')});
-$('#editForm').addEventListener('submit',async e=>{e.preventDefault();const old=allReadings.find(r=>r.id===$('#editId').value);if(!old)return;const sys=+$('#editSys').value,dia=+$('#editDia').value;if(sys<=dia){toast('최고 혈압이 최저 혈압보다 커야 합니다.');return}await dbPut({...old,sys,dia,pulse:$('#editPulse').value?+$('#editPulse').value:null,note:$('#editNote').value.trim(),timestamp:new Date($('#editDate').value).getTime(),updatedAt:Date.now()});$('#editDialog').close();await refresh();toast('수정했습니다.')});
-$('#editCancel').onclick=()=>$('#editDialog').close();$('#editDelete').onclick=async()=>{if(!confirm('이 기록을 삭제할까요?'))return;await dbDelete($('#editId').value);$('#editDialog').close();await refresh();toast('삭제했습니다.')};
-$$('nav button').forEach(b=>b.onclick=()=>{$$('nav button').forEach(x=>x.classList.remove('active'));b.classList.add('active');$$('.view').forEach(v=>v.classList.remove('active'));$('#view-'+b.dataset.view).classList.add('active');if(b.dataset.view==='stats')setTimeout(()=>drawChart(getFiltered()),30)});
-$$('#periodSeg button').forEach(b=>b.onclick=()=>{$$('#periodSeg button').forEach(x=>x.classList.remove('active'));b.classList.add('active');statsDays=+b.dataset.days;renderStats()});
-$('#prevMonth').onclick=()=>{calDate=new Date(calDate.getFullYear(),calDate.getMonth()-1,1);renderCalendar()};$('#nextMonth').onclick=()=>{calDate=new Date(calDate.getFullYear(),calDate.getMonth()+1,1);renderCalendar()};
-function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
-$('#exportJson').onclick=()=>download(`내혈압_백업_${localDateKey(new Date())}.json`,JSON.stringify({app:'내 혈압',version:1,exportedAt:new Date().toISOString(),readings:allReadings},null,2),'application/json');
-$('#exportCsv').onclick=()=>{const head=['날짜','시간','최고혈압','최저혈압','맥박','메모'];const rows=[head,...[...allReadings].reverse().map(r=>{const d=new Date(r.timestamp);return [localDateKey(d),fmtTime(d),r.sys,r.dia,r.pulse||'',r.note||'']})];const csv='\ufeff'+rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n');download(`내혈압_${localDateKey(new Date())}.csv`,csv,'text/csv;charset=utf-8')};
-$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text());if(!Array.isArray(obj.readings))throw 0;if(!confirm(`${obj.readings.length}건의 기록을 현재 데이터에 합칠까요?`))return;for(const r of obj.readings){if(r.id&&r.timestamp&&r.sys&&r.dia)await dbPut(r)}await refresh();toast('백업을 복원했습니다.')}catch{alert('이 앱의 올바른 JSON 백업 파일이 아닙니다.')}e.target.value=''};
-$('#deleteAll').onclick=async()=>{if(!allReadings.length)return toast('삭제할 기록이 없습니다.');if(!confirm('모든 혈압 기록을 삭제합니다. 이 작업은 되돌릴 수 없습니다.'))return;if(!confirm('정말 전체 삭제할까요? JSON 백업을 먼저 권장합니다.'))return;await dbClear();await refresh();toast('전체 기록을 삭제했습니다.')};
-window.addEventListener('resize',()=>{if($('#view-stats').classList.contains('active'))drawChart(getFiltered())});
-
-(async function init(){try{$('#headerDate').innerHTML=fmtDate(new Date()).replace('(','<br>(');await openDB();await refresh();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});}catch(e){console.error(e);alert('저장소를 열지 못했습니다. Safari의 개인 정보 보호 설정을 확인해주세요.')}})();
-</script>
+<script src="app.js"></script>
 </body>
 </html>
